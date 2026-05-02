@@ -35,15 +35,17 @@ jobs:
             sudo ln -sf /etc/nginx/sites-available/price-tracking /etc/nginx/sites-enabled/
 
             # Get SSL cert if not present
-            if [ ! -f "/etc/letsencrypt/live/${{ secrets.DOMAIN }}/fullchain.pem" ]; then
+            DOMAIN="tracking-quangpv.mooo.com"
+            ADMIN_EMAIL="admin@tracking-quangpv.mooo.com"
+            if [ ! -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
               sudo systemctl stop nginx 2>/dev/null || true
               sudo certbot certonly \
                 --standalone \
                 --preferred-challenges http \
-                -d ${{ secrets.DOMAIN }} \
+                -d "$DOMAIN" \
                 --non-interactive \
                 --agree-tos \
-                --email ${{ secrets.ADMIN_EMAIL }} \
+                --email "$ADMIN_EMAIL" \
                 --keep-until-expiring
               sudo systemctl start nginx
             fi
