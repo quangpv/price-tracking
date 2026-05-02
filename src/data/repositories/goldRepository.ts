@@ -3,8 +3,8 @@ import type { GoldDTOResponse } from '../types';
 
 const GIAVANG_NOW_BASE = 'https://giavang.now/api';
 
-// Yahoo Finance API for gold futures (GC=F) - free, public endpoint
-const YAHOO_FINANCE_BASE = import.meta.env.DEV ? '/api/yahoo' : 'https://query1.finance.yahoo.com';
+// Yahoo Finance API for gold futures (GC=F) - proxied via nginx
+const YAHOO_FINANCE_BASE = '/api/yahoo';
 
 export const goldRepository = {
   async getCurrentVNAndWorldGold(): Promise<GoldDTOResponse> {
@@ -40,9 +40,6 @@ export const goldRepository = {
         period1: from,
         period2: to,
         interval: '1d',
-      },
-      headers: {
-        'User-Agent': 'Mozilla/5.0',
       },
     });
 
