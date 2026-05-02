@@ -1,0 +1,50 @@
+{
+  "sidebar": {
+    "appTitle": "Theo Dõi Giá",
+    "nav": {
+      "coin": "Bitcoin",
+      "gold": "Vàng"
+    },
+    "currency": "Tiền Tệ",
+    "language": "Ngôn Ngữ",
+    "exchangeRate": {
+      "prefix": "1 USD =",
+      "suffix": "VND"
+    }
+  },
+  "coinPage": {
+    "title": "Bitcoin",
+    "subtitle": "Theo dõi giá và xu hướng thị trường Bitcoin",
+    "errorChartUnavailable": "Dữ liệu biểu đồ tạm thời không khả dụng",
+    "chart": {
+      "title": "Lịch Sử Giá",
+      "subtitle": "Biểu đồ hàng năm hiển thị xu hướng giá"
+    },
+    "lastUpdated": "Cập nhật lần cuối: ",
+    "marketCap":"Vốn hóa thị trường "
+  },
+  "goldPage": {
+    "title": "Vàng",
+    "subtitle": "Theo dõi giá vàng thế giới và Việt Nam",
+    "worldGold": "Vàng Thế Giới",
+    "chart": {
+      "title": "Lịch Sử Giá",
+      "subtitle": "Biểu đồ hàng năm hiển thị xu hướng giá"
+    },
+    "vnGoldPrices": {
+      "title": "Giá Vàng Việt Nam",
+      "subtitle": "Giá thị trường hiện tại"
+    },
+    "lastUpdated": "Cập nhật lần cuối: "
+  },
+  "vnGoldTable": {
+    "swipeHint": "← Vuốt để xem thêm →",
+    "headers": {
+      "type": "Loại",
+      "buy": "Mua (VND)",
+      "sell": "Bán (VND)",
+      "change": "Thay đổi"
+    },
+    "noData": "Không có dữ liệu giá vàng VN"
+  }
+}

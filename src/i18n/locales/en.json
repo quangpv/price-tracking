@@ -1,0 +1,50 @@
+{
+  "sidebar": {
+    "appTitle": "Price Tracker",
+    "nav": {
+      "coin": "Bitcoin",
+      "gold": "Gold"
+    },
+    "currency": "Currency",
+    "language": "Language",
+    "exchangeRate": {
+      "prefix": "1 USD =",
+      "suffix": "VND"
+    }
+  },
+  "coinPage": {
+    "title": "Bitcoin",
+    "subtitle": "Track Bitcoin price and market trends",
+    "errorChartUnavailable": "Chart data temporarily unavailable",
+    "chart": {
+      "title": "Price History",
+      "subtitle": "Yearly chart showing price trends"
+    },
+    "lastUpdated": "Last updated: ",
+    "marketCap":"Market cap "
+  },
+  "goldPage": {
+    "title": "Gold",
+    "subtitle": "World and Vietnamese gold price tracking",
+    "worldGold": "World Gold",
+    "chart": {
+      "title": "Price History",
+      "subtitle": "Yearly chart showing price trends"
+    },
+    "vnGoldPrices": {
+      "title": "Vietnamese Gold Prices",
+      "subtitle": "Current market prices"
+    },
+    "lastUpdated": "Last updated: "
+  },
+  "vnGoldTable": {
+    "swipeHint": "Swipe to see more",
+    "headers": {
+      "type": "Type",
+      "buy": "Buy (VND)",
+      "sell": "Sell (VND)",
+      "change": "Change"
+    },
+    "noData": "No VN gold price data available"
+  }
+}
