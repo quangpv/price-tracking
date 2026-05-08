@@ -9,7 +9,7 @@ jobs:
   setup-vps:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup VPS
+      - name: Setup VPS base services
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -28,15 +28,9 @@ jobs:
               sudo apt update && sudo apt install -y certbot
             fi
 
-            # Deploy nginx config (base64 to preserve $variables)
-             echo "IyBIVFRQIC0+IEhUVFBTIHJlZGlyZWN0CnNlcnZlciB7CiAgICBsaXN0ZW4gODA7CiAgICBzZXJ2ZXJfbmFtZSB0cmFja2luZy1xdWFuZ3B2Lm1vb28uY29tOwoKICAgIGxvY2F0aW9uIC8ud2VsbC1rbm93bi9hY21lLWNoYWxsZW5nZS8gewogICAgICAgIHJvb3QgL3Zhci93d3cvY2VydGJvdDsKICAgIH0KCiAgICBsb2NhdGlvbiAvIHsKICAgICAgICByZXR1cm4gMzAxIGh0dHBzOi8vJGhvc3QkcmVxdWVzdF91cmk7CiAgICB9Cn0KCiMgSFRUUFMgc2VydmVyCnNlcnZlciB7CiAgICBsaXN0ZW4gNDQzIHNzbCBodHRwMjsKICAgIHNlcnZlcl9uYW1lIHRyYWNraW5nLXF1YW5ncHYubW9vby5jb207CgogICAgIyBTU0wgY2VydGlmaWNhdGVzIChhZnRlciBjZXJ0Ym90KQogICAgc3NsX2NlcnRpZmljYXRlICAgICAvZXRjL2xldHNlbmNyeXB0L2xpdmUvdHJhY2tpbmctcXVhbmdwdi5tb29vLmNvbS9mdWxsY2hhaW4ucGVtOwogICAgc3NsX2NlcnRpZmljYXRlX2tleSAvZXRjL2xldHNlbmNyeXB0L2xpdmUvdHJhY2tpbmctcXVhbmdwdi5tb29vLmNvbS9wcml2a2V5LnBlbTsKCiAgICAjIFNTTCBoYXJkZW5pbmcKICAgIHNzbF9wcm90b2NvbHMgVExTdjEuMiBUTFN2MS4zOwogICAgc3NsX2NpcGhlcnMgSElHSDohYU5VTEw6IU1ENTsKICAgIHNzbF9wcmVmZXJfc2VydmVyX2NpcGhlcnMgb247CiAgICBzc2xfc2Vzc2lvbl9jYWNoZSBzaGFyZWQ6U1NMOjEwbTsKICAgIHNzbF9zZXNzaW9uX3RpbWVvdXQgMTBtOwoKICAgICMgQXBwIHJvb3QKICAgIHJvb3QgX19ERVBMT1lfUEFUSF9fOwogICAgaW5kZXggaW5kZXguaHRtbDsKCiAgICAjIFNlY3VyaXR5IGhlYWRlcnMKICAgIGFkZF9oZWFkZXIgWC1GcmFtZS1PcHRpb25zIFNBTUVPUklHSU47CiAgICBhZGRfaGVhZGVyIFgtQ29udGVudC1UeXBlLU9wdGlvbnMgbm9zbmlmZjsKICAgIGFkZF9oZWFkZXIgWC1YU1MtUHJvdGVjdGlvbiAiMTsgbW9kZT1ibG9jayI7CgogICAgIyBTUEEgZmFsbGJhY2sKICAgIGxvY2F0aW9uIC8gewogICAgICAgIHRyeV9maWxlcyAkdXJpICR1cmkvIC9pbmRleC5odG1sOwoKICAgICAgICAjIENhY2hlIHN0YXRpYyBhc3NldHMKICAgICAgICBsb2NhdGlvbiB+KiBcLihqc3xjc3N8cG5nfGpwZ3xqcGVnfGdpZnxpY298c3ZnfHdvZmZ8d29mZjJ8dHRmfGVvdCkkIHsKICAgICAgICAgICAgZXhwaXJlcyAxeTsKICAgICAgICAgICAgYWRkX2hlYWRlciBDYWNoZS1Db250cm9sICJwdWJsaWMsIGltbXV0YWJsZSI7CiAgICAgICAgfQogICAgfQoKICAgICMgUHJveHkgZm9yIEJpbmFuY2UgQVBJCiAgICBsb2NhdGlvbiAvYXBpL2JpbmFuY2UvIHsKICAgICAgICBwcm94eV9wYXNzIGh0dHBzOi8vYXBpLmJpbmFuY2UuY29tLzsKICAgICAgICBwcm94eV9zZXRfaGVhZGVyIEhvc3QgYXBpLmJpbmFuY2UuY29tOwogICAgICAgIHByb3h5X3NldF9oZWFkZXIgVXNlci1BZ2VudCAiTW96aWxsYS81LjAiOwogICAgICAgIHByb3h5X3NldF9oZWFkZXIgWC1SZWFsLUlQICRyZW1vdGVfYWRkcjsKICAgICAgICBwcm94eV9zZXRfaGVhZGVyIFgtRm9yd2FyZGVkLUZvciAkcHJveHlfYWRkX3hfZm9yd2FyZGVkX2ZvcjsKICAgICAgICBwcm94eV9zc2xfc2VydmVyX25hbWUgb247CiAgICB9CgogICAgIyBQcm94eSBmb3IgWWFob28gRmluYW5jZSBBUEkKICAgIGxvY2F0aW9uIC9hcGkveWFob28vIHsKICAgICAgICBwcm94eV9wYXNzIGh0dHBzOi8vcXVlcnkxLmZpbmFuY2UueWFob28uY29tLzsKICAgICAgICBwcm94eV9zZXRfaGVhZGVyIEhvc3QgcXVlcnkxLmZpbmFuY2UueWFob28uY29tOwogICAgICAgIHByb3h5X3NldF9oZWFkZXIgVXNlci1BZ2VudCAiTW96aWxsYS81LjAiOwogICAgICAgIHByb3h5X3NldF9oZWFkZXIgWC1SZWFsLUlQICRyZW1vdGVfYWRkcjsKICAgICAgICBwcm94eV9zZXRfaGVhZGVyIFgtRm9yd2FyZGVkLUZvciAkcHJveHlfYWRkX3hfZm9yd2FyZGVkX2ZvcjsKICAgICAgICBwcm94eV9zc2xfc2VydmVyX25hbWUgb247CiAgICB9Cn0K" | sudo base64 -d | sudo sed "s|__DEPLOY_PATH__|${{ secrets.DEPLOY_PATH }}|g" | sudo tee /etc/nginx/sites-available/price-tracking > /dev/null
-
-            # Enable site
-            sudo ln -sf /etc/nginx/sites-available/price-tracking /etc/nginx/sites-enabled/
-
             # Get SSL cert if not present
-            DOMAIN="tracking-quangpv.mooo.com"
-            ADMIN_EMAIL="admin@tracking-quangpv.mooo.com"
+            DOMAIN="${{ secrets.VPS_DOMAIN }}"
+            ADMIN_EMAIL="${{ secrets.VPS_ADMIN_EMAIL }}"
             if [ ! -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
               sudo systemctl stop nginx 2>/dev/null || true
               sudo certbot certonly \
@@ -54,9 +48,6 @@ jobs:
             if ! sudo crontab -l 2>/dev/null | grep -q "certbot"; then
               (sudo crontab -l 2>/dev/null; echo "0 0 * * * certbot renew --quiet && systemctl reload nginx") | sudo crontab -
             fi
-
-            # Test and reload
-            sudo nginx -t && sudo systemctl reload nginx
 
   build-and-deploy:
     needs: setup-vps
@@ -77,7 +68,41 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to VPS
+      - name: Deploy nginx config to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "nginx/price-tracking.conf"
+          target: "/home/${{ secrets.VPS_USER }}/"
+          overwrite: true
+
+      - name: Configure and enable nginx site
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            CONFIG_SRC="/home/${{ secrets.VPS_USER }}/nginx/price-tracking.conf"
+            CONFIG_DEST="/etc/nginx/sites-available/price-tracking"
+
+            # Move config to nginx sites-available
+            sudo mv "$CONFIG_SRC" "$CONFIG_DEST"
+
+            # Replace placeholders with actual values
+            sudo sed -i "s|__DOMAIN__|${{ secrets.VPS_DOMAIN }}|g" "$CONFIG_DEST"
+            sudo sed -i "s|__DEPLOY_PATH__|${{ secrets.DEPLOY_PATH }}|g" "$CONFIG_DEST"
+
+            # Enable site
+            sudo ln -sf "$CONFIG_DEST" /etc/nginx/sites-enabled/
+
+            # Test and reload
+            sudo nginx -t && sudo systemctl reload nginx
+
+      - name: Deploy app to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
