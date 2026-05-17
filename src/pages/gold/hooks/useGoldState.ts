@@ -1,67 +1,62 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo } from 'react';
+import { useQueries } from '@tanstack/react-query';
 import { goldRepository } from '../../../data/repositories/goldRepository';
 import { goldMapper } from '../mapper';
-import type { IWorldGoldPrice, IGoldChartData, IVNGoldData } from '../types';
+import type { Currency } from '../../../shared/types/Currency';
 
-const POLLING_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const POLLING_INTERVAL = 5 * 60 * 1000;
 
-export const useGoldState = (currency: 'usd' | 'vnd' = 'usd') => {
-  const [vnGoldData, setVnGoldData] = useState<IVNGoldData | null>(null);
-  const [worldGoldPrice, setWorldGoldPrice] = useState<IWorldGoldPrice | null>(null);
-  const [chartData, setChartData] = useState<IGoldChartData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [lastPolled, setLastPolled] = useState<number>(0);
+export const useGoldState = (currency: Currency = 'usd') => {
+  const from = useMemo(() => Math.floor(new Date('2025-01-01').getTime() / 1000), []);
+  const to = useMemo(() => Math.floor(Date.now() / 1000), []);
 
-  const fetchCurrentGold = useCallback(async () => {
-    try {
-      const response = await goldRepository.getCurrentVNAndWorldGold();
-      const vnData = goldMapper.toVNGoldData(response);
-      setVnGoldData(vnData);
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ['gold', 'currentPrices'],
+        queryFn: () => goldRepository.getCurrentVNAndWorldGold(),
+        refetchInterval: POLLING_INTERVAL,
+        staleTime: POLLING_INTERVAL - 60 * 1000,
+      },
+      {
+        queryKey: ['gold', 'chart', currency, from, to],
+        queryFn: () => goldRepository.getWorldGoldYearlyChart(from, to, currency),
+        staleTime: 1000 * 60 * 5,
+      },
+    ],
+  });
 
-      const worldGold = goldMapper.toWorldGoldFromResponse(response);
-      if (worldGold) {
-        setWorldGoldPrice(worldGold);
-      }
+  const [pricesQuery, chartQuery] = results;
 
-      setLastPolled(Date.now());
-    } catch (error) {
-      console.error('Failed to fetch current gold:', error);
-    }
-  }, []);
+  const vnGoldData = useMemo(
+    () => (pricesQuery.data ? goldMapper.toVNGoldData(pricesQuery.data) : null),
+    [pricesQuery.data],
+  );
 
-  const fetchChartData = useCallback(async () => {
-    try {
-      const from = Math.floor(new Date('2025-01-01').getTime() / 1000);
-      const to = Math.floor(Date.now() / 1000);
-      const chartRes = await goldRepository.getWorldGoldYearlyChart(from, to, currency);
-      setChartData(goldMapper.toChartData(chartRes));
-    } catch (error) {
-      console.error('Failed to fetch gold chart:', error);
-    }
-  }, [currency]);
+  const worldGoldPrice = useMemo(
+    () => (pricesQuery.data ? goldMapper.toWorldGoldFromResponse(pricesQuery.data) : null),
+    [pricesQuery.data],
+  );
 
-  const fetchAll = useCallback(async () => {
-    setLoading(true);
-    await Promise.all([fetchCurrentGold(), fetchChartData()]);
-    setLoading(false);
-  }, [fetchCurrentGold, fetchChartData]);
+  const chartData = useMemo(
+    () => (chartQuery.data ? goldMapper.toChartData(chartQuery.data) : []),
+    [chartQuery.data],
+  );
 
-  useEffect(() => {
-    fetchAll();
+  const loading = useMemo(
+    () => pricesQuery.isLoading || chartQuery.isLoading,
+    [pricesQuery.isLoading, chartQuery.isLoading],
+  );
 
-    const interval = setInterval(() => {
-      fetchCurrentGold();
-    }, POLLING_INTERVAL);
-
-    return () => clearInterval(interval);
-  }, [fetchAll, fetchCurrentGold]);
-
-  return {
-    vnGoldData,
-    worldGoldPrice,
-    chartData,
-    loading,
-    lastPolled,
-    refetch: fetchAll,
-  };
+  return useMemo(
+    () => ({
+      vnGoldData,
+      worldGoldPrice,
+      chartData,
+      loading,
+      lastPolled: pricesQuery.dataUpdatedAt ?? 0,
+      refetch: () => { pricesQuery.refetch(); chartQuery.refetch(); },
+    }),
+    [vnGoldData, worldGoldPrice, chartData, loading, pricesQuery.dataUpdatedAt, pricesQuery.refetch, chartQuery.refetch],
+  );
 };

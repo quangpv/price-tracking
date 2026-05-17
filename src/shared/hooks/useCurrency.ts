@@ -1,36 +1,22 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { exchangeRateRepository } from '../../data/repositories/exchangeRateRepository';
 
 export const useCurrency = () => {
   const [currency, setCurrency] = useState<'usd' | 'vnd'>('usd');
-  const [exchangeRate, setExchangeRate] = useState<number>(24850);
-  const [rateLoading, setRateLoading] = useState(false);
+  const { data: exchangeRate = 24850 } = useQuery({
+    queryKey: ['exchangeRate'],
+    queryFn: exchangeRateRepository.getExchangeRate,
+    staleTime: 1000 * 60 * 30,
+  });
 
-  const fetchRate = useCallback(async () => {
-    setRateLoading(true);
-    try {
-      const rate = await exchangeRateRepository.getExchangeRate();
-      setExchangeRate(rate);
-    } catch (error) {
-      console.error('Failed to fetch exchange rate:', error);
-    } finally {
-      setRateLoading(false);
-    }
-  }, []);
+  const convertToVND = useCallback(
+    (usdPrice: number): number => usdPrice * exchangeRate,
+    [exchangeRate],
+  );
 
-  useEffect(() => {
-    fetchRate();
-  }, [fetchRate]);
-
-  const convertToVND = (usdPrice: number): number => {
-    return usdPrice * exchangeRate;
-  };
-
-  return {
-    currency,
-    setCurrency,
-    exchangeRate,
-    convertToVND,
-    rateLoading,
-  };
+  return useMemo(
+    () => ({ currency, setCurrency, exchangeRate, convertToVND }),
+    [currency, exchangeRate, convertToVND],
+  );
 };
