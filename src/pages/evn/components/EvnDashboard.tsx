@@ -1,39 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Activity, ReceiptText, Calculator, CreditCard, Calendar, History,
   AlertCircle, LogOut, Zap,
 } from 'lucide-react';
-import type { IDashboardStats, EvnTabType, IDailyData, IInvoice, IDebtItem } from '../types';
+import type { EvnTabType } from '../types';
 import { DailyConsumptionTab } from './DailyConsumptionTab';
 import { BillingHistoryTab } from './BillingHistoryTab';
 import { DebtCheckTab } from './DebtCheckTab';
 import { CalculatorTab } from './CalculatorTab';
+import { useEvnState } from '../hooks/useEvnState';
+import { useLogout } from '../hooks/useLogout';
 
 interface EvnDashboardProps {
-  stats: IDashboardStats;
-  dailyData: IDailyData[];
-  dailyTitle: string;
-  soNgay: number;
-  invoices: IInvoice[];
-  billingTotal: {
-    sanLuongFormat: string;
-    soTien: number;
-    tienThue: number;
-    tongTien: number;
-  } | null;
-  debtItems: IDebtItem[];
-  hasDebt: boolean;
-  calcKwh: number;
-  calcVat: number;
-  onCalcKwhChange: (kwh: number) => void;
-  onCalcVatChange: (vat: number) => void;
-  onLogout: () => void;
-  loading: boolean;
-  onRefreshDaily: () => void;
-  fromDate: string;
-  toDate: string;
-  onFromDateChange: (date: string) => void;
-  onToDateChange: (date: string) => void;
+  customerId: string;
+  onSessionExpired: () => void;
 }
 
 const formatCurrency = (amount: number) => {
@@ -48,27 +28,47 @@ const TABS: { id: EvnTabType; icon: React.ReactNode; label: string }[] = [
 ];
 
 export const EvnDashboard: React.FC<EvnDashboardProps> = ({
-  stats,
-  dailyData,
-  dailyTitle,
-  soNgay,
-  invoices,
-  billingTotal,
-  debtItems,
-  hasDebt,
-  calcKwh,
-  calcVat,
-  onCalcKwhChange,
-  onCalcVatChange,
-  onLogout,
-  loading,
-  onRefreshDaily,
-  fromDate,
-  toDate,
-  onFromDateChange,
-  onToDateChange,
+  customerId,
+  onSessionExpired,
 }) => {
   const [activeTab, setActiveTab] = useState<EvnTabType>('daily');
+  const [fromDate, setFromDate] = useState('2026-05-01');
+  const [toDate, setToDate] = useState('2026-05-18');
+  const [calcKwh, setCalcKwh] = useState<number>(0);
+  const [calcVat, setCalcVat] = useState<number>(10);
+  const calcKwhInitialized = useRef(false);
+
+  const { handleLogout } = useLogout();
+
+  const onLogout = useCallback(async () => {
+    await handleLogout();
+    onSessionExpired();
+  }, [handleLogout, onSessionExpired]);
+
+  const {
+    dailyData,
+    dailyTitle,
+    soNgay,
+    invoices,
+    billingTotal,
+    debtItems,
+    hasDebt,
+    stats,
+    loading,
+    refetch,
+  } = useEvnState({
+    customerId,
+    fromDate,
+    toDate,
+    onSessionExpired,
+  });
+
+  useEffect(() => {
+    if (stats.monthConsumption > 0 && !calcKwhInitialized.current) {
+      setCalcKwh(stats.monthConsumption);
+      calcKwhInitialized.current = true;
+    }
+  }, [stats.monthConsumption]);
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_10%_20%,_rgb(241,245,249)_0%,_rgb(248,250,252)_90%)] dark:bg-slate-900 dark:bg-none flex flex-col font-sans text-slate-900 dark:text-slate-100 antialiased">
@@ -220,9 +220,9 @@ export const EvnDashboard: React.FC<EvnDashboardProps> = ({
             soNgay={soNgay}
             fromDate={fromDate}
             toDate={toDate}
-            onFromDateChange={onFromDateChange}
-            onToDateChange={onToDateChange}
-            onRefresh={onRefreshDaily}
+            onFromDateChange={setFromDate}
+            onToDateChange={setToDate}
+            onRefresh={refetch}
             loading={loading}
           />
         )}
@@ -236,8 +236,8 @@ export const EvnDashboard: React.FC<EvnDashboardProps> = ({
           <CalculatorTab
             calcKwh={calcKwh}
             calcVat={calcVat}
-            onCalcKwhChange={onCalcKwhChange}
-            onCalcVatChange={onCalcVatChange}
+            onCalcKwhChange={setCalcKwh}
+            onCalcVatChange={setCalcVat}
           />
         )}
       </main>

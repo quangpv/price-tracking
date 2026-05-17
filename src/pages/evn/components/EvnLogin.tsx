@@ -1,32 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Zap, User, Lock, Contact, ArrowRight, RefreshCw, AlertCircle } from 'lucide-react';
+import { evnRepository } from '../../../data/repositories/evnRepository';
 
 interface EvnLoginProps {
-  phone: string;
-  password: string;
-  onPhoneChange: (v: string) => void;
-  onPasswordChange: (v: string) => void;
   customerId: string;
   onCustomerIdChange: (id: string) => void;
-  onLogin: () => void;
-  isLoading: boolean;
-  loginError: string;
+  onLoginSuccess: () => void;
 }
 
 export const EvnLogin: React.FC<EvnLoginProps> = ({
-  phone,
-  password,
-  onPhoneChange,
-  onPasswordChange,
   customerId,
   onCustomerIdChange,
-  onLogin,
-  isLoading,
-  loginError,
+  onLoginSuccess,
 }) => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin();
+    setIsLoading(true);
+    setLoginError('');
+    try {
+      const res = await evnRepository.login(phone, password);
+      if (res.state === 'success') {
+        onLoginSuccess();
+      } else {
+        setLoginError(res.alert || 'Đăng nhập thất bại');
+      }
+    } catch {
+      setLoginError('Không thể kết nối đến EVN. Vui lòng thử lại sau.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -69,7 +76,7 @@ export const EvnLogin: React.FC<EvnLoginProps> = ({
                 <input
                   type="text"
                   value={phone}
-                  onChange={(e) => onPhoneChange(e.target.value)}
+                  onChange={(e) => setPhone(e.target.value)}
                   required
                   className="w-full pl-10 pr-4 py-3 border border-slate-200/80 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-[#0284c7] focus:border-[#0284c7] outline-none text-sm transition-all placeholder:text-slate-300 dark:placeholder:text-slate-500 font-medium bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
                 />
@@ -87,7 +94,7 @@ export const EvnLogin: React.FC<EvnLoginProps> = ({
                 <input
                   type="password"
                   value={password}
-                  onChange={(e) => onPasswordChange(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
                   className="w-full pl-10 pr-4 py-3 border border-slate-200/80 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-[#0284c7] focus:border-[#0284c7] outline-none text-sm transition-all placeholder:text-slate-300 dark:placeholder:text-slate-500 font-medium bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"

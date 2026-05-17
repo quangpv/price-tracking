@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { evnRepository, toApiDate } from '../../../data/repositories/evnRepository';
 import { evnMapper } from '../mapper';
@@ -55,9 +55,10 @@ interface UseEvnStateParams {
   customerId: string;
   fromDate: string;
   toDate: string;
+  onSessionExpired?: () => void;
 }
 
-export function useEvnState({ customerId, fromDate, toDate }: UseEvnStateParams) {
+export function useEvnState({ customerId, fromDate, toDate, onSessionExpired }: UseEvnStateParams) {
   const results = useQueries({
     queries: [
       {
@@ -81,12 +82,12 @@ export function useEvnState({ customerId, fromDate, toDate }: UseEvnStateParams)
   const [dailyQuery, billingQuery, debtQuery] = results;
 
   const dailyData = useMemo<IDailyData[]>(() => {
-    if (!dailyQuery.data) return [];
+    if (!dailyQuery.data?.data) return [];
     return evnMapper.toDailyData(dailyQuery.data.data.sanluong_tungngay);
   }, [dailyQuery.data]);
 
   const dailyTotal = useMemo<EvnDailyTotalDTO | null>(() => {
-    if (!dailyQuery.data) return null;
+    if (!dailyQuery.data?.data) return null;
     return dailyQuery.data.data.sanluong_tong;
   }, [dailyQuery.data]);
 
@@ -114,23 +115,30 @@ export function useEvnState({ customerId, fromDate, toDate }: UseEvnStateParams)
     staleTime: 1000 * 60 * 5,
   });
 
+  useEffect(() => {
+    const isSessionExpired = [dailyQuery, billingQuery, debtQuery].some(
+      q => q.data && typeof q.data === 'object' && 'state' in q.data && q.data.state === 'error',
+    );
+    if (isSessionExpired) onSessionExpired?.();
+  }, [dailyQuery.data, billingQuery.data, debtQuery.data, onSessionExpired]);
+
   const dailyTitle = useMemo<string>(() => {
-    if (!dailyQuery.data) return '';
+    if (!dailyQuery.data?.data) return '';
     return dailyQuery.data.data.tieude;
   }, [dailyQuery.data]);
 
   const soNgay = useMemo<number>(() => {
-    if (!dailyQuery.data) return 0;
+    if (!dailyQuery.data?.data) return 0;
     return dailyQuery.data.data.soNgay;
   }, [dailyQuery.data]);
 
   const invoices = useMemo<IInvoice[]>(() => {
-    if (!billingQuery.data) return [];
+    if (!billingQuery.data?.data) return [];
     return evnMapper.toInvoices(billingQuery.data.data.sanluong_hoadon);
   }, [billingQuery.data]);
 
   const billingTotal = useMemo(() => {
-    if (!billingQuery.data) return null;
+    if (!billingQuery.data?.data) return null;
     return evnMapper.toBillingTotal(billingQuery.data.data.tong);
   }, [billingQuery.data]);
 
