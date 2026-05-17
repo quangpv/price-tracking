@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCurrency } from './shared/hooks/useCurrency';
-import { Sidebar } from './components/Sidebar/Sidebar';
-import { DashboardLayout } from './components/Layout/DashboardLayout';
+import { Sidebar } from './shared/components/Sidebar/Sidebar';
+import { DashboardLayout } from './shared/components/Layout/DashboardLayout';
 import { CoinPage } from './pages/coin/CoinPage';
 import { GoldPage } from './pages/gold/GoldPage';
 

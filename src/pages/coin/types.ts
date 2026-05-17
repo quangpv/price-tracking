@@ -1,14 +1,15 @@
 export interface ICoinPrice {
-  id: string;
-  symbol: string;
-  name: string;
-  currentPrice: number;
-  marketCap: number;
-  priceChange24h: number;
-  currency: 'usd' | 'vnd';
+    updatedAt: string;
+    id: string;
+    symbol: string;
+    name: string;
+    currentPrice: string;
+    marketCap: string;
+    priceChange24h: number;
+    currency: 'usd' | 'vnd';
 }
 
 export interface ICoinChartData {
-  date: string;
-  price: number;
+    date: string;
+    price: number;
 }

@@ -5,7 +5,7 @@ import type { IWorldGoldPrice, IGoldChartData, IVNGoldData } from '../types';
 
 const POLLING_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
-export const useGold = (currency: 'usd' | 'vnd' = 'usd') => {
+export const useGoldState = (currency: 'usd' | 'vnd' = 'usd') => {
   const [vnGoldData, setVnGoldData] = useState<IVNGoldData | null>(null);
   const [worldGoldPrice, setWorldGoldPrice] = useState<IWorldGoldPrice | null>(null);
   const [chartData, setChartData] = useState<IGoldChartData[]>([]);

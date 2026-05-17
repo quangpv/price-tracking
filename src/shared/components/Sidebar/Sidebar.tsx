@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../../shared/hooks/useTheme';
+import { useTheme } from '../../hooks/useTheme.ts';
 
 type NavItem = {
   id: 'coin' | 'gold';
@@ -44,7 +44,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <>
       {/* Mobile overlay */}
       {mobileOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/20 z-30 md:hidden"
           onClick={() => setMobileOpen(false)}
         />

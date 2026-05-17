@@ -3,7 +3,7 @@ import { coinRepository } from '../../../data/repositories/coinRepository';
 import { coinMapper } from '../mapper';
 import type { ICoinPrice, ICoinChartData } from '../types';
 
-export const useCoin = (currency: 'usd' | 'vnd') => {
+export const useCoinState = (currency: 'usd' | 'vnd') => {
   const [currentPrice, setCurrentPrice] = useState<ICoinPrice | null>(null);
   const [chartData, setChartData] = useState<ICoinChartData[]>([]);
   const [loading, setLoading] = useState(true);

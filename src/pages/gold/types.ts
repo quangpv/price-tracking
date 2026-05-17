@@ -21,6 +21,5 @@ export interface IVNGoldPrice {
 
 export interface IVNGoldData {
   prices: IVNGoldPrice[];
-  lastUpdated: number;
-  currentTime: number;
+  lastUpdated: string;
 }

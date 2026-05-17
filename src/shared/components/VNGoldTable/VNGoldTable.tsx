@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import type { IVNGoldPrice } from '../../../pages/gold/types';
-import { formatPrice, formatPercent } from '../../../shared/utils/formatPrice';
-import { Shimmer } from '../../../components/Shimmer/Shimmer';
+import { formatter } from '../../../shared/utils/formatter';
+import { Shimmer } from '../Shimmer/Shimmer';
 
 interface VNGoldTableProps {
   prices: IVNGoldPrice[];
@@ -50,17 +50,17 @@ export const VNGoldTable: React.FC<VNGoldTableProps> = ({ prices, loading }) => 
                   <div className="text-xs text-gray-400 dark:text-gray-500">{gold.typeCode}</div>
                 </td>
                 <td className="py-3.5 px-4 text-right font-mono text-gray-700 dark:text-gray-200 font-medium">
-                  {formatPrice(gold.buy, 'vnd', true)}
+                  {formatter.price(gold.buy, 'vnd', true)}
                 </td>
                 <td className="py-3.5 px-4 text-right font-mono text-gray-700 dark:text-gray-200 font-medium">
-                  {formatPrice(gold.sell, 'vnd', true)}
+                  {formatter.price(gold.sell, 'vnd', true)}
                 </td>
                 <td className={`py-3.5 px-4 text-right font-semibold text-sm ${
                   gold.changeBuy >= 0 ? 'text-success' : 'text-danger'
                 }`}>
                   <span className="inline-flex items-center gap-1">
                     {gold.changeBuy >= 0 ? '↑' : '↓'}
-                    {formatPercent(gold.changeBuy / (gold.buy - gold.changeBuy) * 100)}
+                    {formatter.percent(gold.changeBuy / (gold.buy - gold.changeBuy) * 100)}
                   </span>
                 </td>
               </tr>
