@@ -8,8 +8,8 @@ import type {
     EvnLoginDTO,
 } from '../types';
 
-const EVN_BASE = import.meta.env.DEV ? '/api/evn' : 'https://www.evnhcmc.vn';
-const EVN_CALC_BASE = import.meta.env.DEV ? '/api/evn-calc' : 'https://calc.evn.com.vn';
+const EVN_BASE = '/api/evn';
+const EVN_CALC_BASE = '/api/evn-calc';
 
 const EVN_HEADERS = {
     Accept: 'application/json, text/javascript, */*; q=0.01',
