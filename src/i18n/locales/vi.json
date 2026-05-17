@@ -3,7 +3,8 @@
     "appTitle": "Theo Dõi Giá",
     "nav": {
       "coin": "Bitcoin",
-      "gold": "Vàng"
+      "gold": "Vàng",
+      "evn": "Điện lực"
     },
     "currency": "Tiền Tệ",
     "language": "Ngôn Ngữ",
@@ -46,5 +47,32 @@
       "change": "Thay đổi"
     },
     "noData": "Không có dữ liệu giá vàng VN"
+  },
+  "evnPage": {
+    "title": "EVN HCMC Điện lực",
+    "subtitle": "Giám sát điện năng, hóa đơn và chi phí",
+    "login": {
+      "title": "Tra Cứu & Giám Sát Điện Năng",
+      "description": "Đồng bộ chỉ số, kiểm tra nợ và tính toán hoá đơn chi tiết",
+      "phoneLabel": "Số điện thoại / Username",
+      "passwordLabel": "Mật khẩu",
+      "customerIdLabel": "Mã Khách Hàng (Mã PE)",
+      "submit": "XÁC NHẬN ĐĂNG NHẬP",
+      "loading": "Đang đăng nhập..."
+    },
+    "stats": {
+      "monthConsumption": "Tiêu thụ tháng này",
+      "lastBill": "Hóa đơn gần nhất",
+      "estimatedBill": "Ước tính Tiền Điện",
+      "debtStatus": "Trạng thái nợ",
+      "hasDebt": "Còn dư nợ",
+      "noDebt": "Đã hoàn thành"
+    },
+    "tabs": {
+      "daily": "Sản lượng ngày",
+      "billing": "Kỳ hóa đơn",
+      "debt": "Kiểm tra nợ",
+      "calculator": "Ước tính giá"
+    }
   }
 }

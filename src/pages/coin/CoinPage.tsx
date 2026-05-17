@@ -73,9 +73,9 @@ export const CoinPage: React.FC<CoinPageProps> = ({currency}) => {
             {/* Last Updated */}
             {currentPrice && (
                 <p className="text-xs text-gray-400 text-right">
-                    <p className="text-xs text-gray-400 dark:text-gray-500 text-right">
+                    <span className="text-xs text-gray-400 dark:text-gray-500 text-right">
                         {t('coinPage.lastUpdated')}{currentPrice.updatedAt}
-                    </p>
+                    </span>
                 </p>
             )}
         </div>

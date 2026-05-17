@@ -3,7 +3,8 @@
     "appTitle": "Price Tracker",
     "nav": {
       "coin": "Bitcoin",
-      "gold": "Gold"
+      "gold": "Gold",
+      "evn": "Electricity"
     },
     "currency": "Currency",
     "language": "Language",
@@ -46,5 +47,32 @@
       "change": "Change"
     },
     "noData": "No VN gold price data available"
+  },
+  "evnPage": {
+    "title": "EVN HCMC Electricity",
+    "subtitle": "Monitor electricity consumption, billing, and costs",
+    "login": {
+      "title": "Electricity Monitoring & Tracking",
+      "description": "Sync meter readings, check debts, and calculate detailed bills",
+      "phoneLabel": "Phone / Username",
+      "passwordLabel": "Password",
+      "customerIdLabel": "Customer ID (PE Code)",
+      "submit": "SIGN IN",
+      "loading": "Signing in..."
+    },
+    "stats": {
+      "monthConsumption": "This Month Usage",
+      "lastBill": "Last Bill",
+      "estimatedBill": "Estimated Cost",
+      "debtStatus": "Debt Status",
+      "hasDebt": "Has Outstanding Debt",
+      "noDebt": "All Paid"
+    },
+    "tabs": {
+      "daily": "Daily Usage",
+      "billing": "Billing History",
+      "debt": "Debt Check",
+      "calculator": "Cost Estimator"
+    }
   }
 }

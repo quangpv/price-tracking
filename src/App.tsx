@@ -4,8 +4,9 @@ import { Sidebar } from './shared/components/Sidebar/Sidebar';
 import { DashboardLayout } from './shared/components/Layout/DashboardLayout';
 import { CoinPage } from './pages/coin/CoinPage';
 import { GoldPage } from './pages/gold/GoldPage';
+import { EvnPage } from './pages/evn/EvnPage';
 
-type TabType = 'coin' | 'gold';
+type TabType = 'coin' | 'gold' | 'evn';
 
 function App() {
   const { currency, setCurrency, exchangeRate } = useCurrency();
@@ -28,6 +29,7 @@ function App() {
         <DashboardLayout>
           {activeTab === 'coin' && <CoinPage currency={currency} />}
           {activeTab === 'gold' && <GoldPage currency={currency} />}
+          {activeTab === 'evn' && <EvnPage />}
         </DashboardLayout>
       </main>
     </div>

@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../hooks/useTheme.ts';
 
 type NavItem = {
-  id: 'coin' | 'gold';
+  id: 'coin' | 'gold' | 'evn';
   label: string;
   icon: React.ReactNode;
 }
 
 interface SidebarProps {
-  activeTab: 'coin' | 'gold';
-  onTabChange: (tab: 'coin' | 'gold') => void;
+  activeTab: 'coin' | 'gold' | 'evn';
+  onTabChange: (tab: 'coin' | 'gold' | 'evn') => void;
   currency: 'usd' | 'vnd';
   onCurrencyChange: (currency: 'usd' | 'vnd') => void;
   exchangeRate: number;
@@ -26,6 +26,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const NAV_ITEMS: NavItem[] = [
     { id: 'coin', label: t('sidebar.nav.coin'), icon: <span>₿</span> },
     { id: 'gold', label: t('sidebar.nav.gold'), icon: <span>★</span> },
+    { id: 'evn', label: t('sidebar.nav.evn'), icon: <span>⚡</span> },
   ];
 
   // Prevent body scroll when sidebar is open on mobile
